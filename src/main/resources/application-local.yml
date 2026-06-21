@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/housekey
+    username: housekey
+    password: housekey
+    driver-class-name: org.postgresql.Driver
+
+housekey:
+  jwt:
+    secret: ${HOUSEKEY_JWT_SECRET:local-development-jwt-secret-change-me-32b}
+  dev-user:
+    enabled: true
+    username: agency.demo
+    email: agency.demo@housekey.local
+    password: Password123!
+    role: AGENCY
+    first-name: Demo
+    last-name: Agency

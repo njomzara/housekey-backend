@@ -1,0 +1,809 @@
+{
+  "info": {
+    "_postman_id": "8d37e606-8e2d-4a72-9b14-07dc44fe3f0a",
+    "name": "HouseKey Backend API",
+    "description": "Postman collection for the current HouseKey Spring Boot backend API. Run the backend locally with `docker compose up -d` and `mvn spring-boot:run -Dspring-boot.run.profiles=local`, then use the HouseKey Backend - Local environment.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const contentType = pm.response.headers.get(\"Content-Type\") || \"\";",
+          "if (contentType.includes(\"application/json\")) {",
+          "  pm.test(\"Response is valid JSON\", function () {",
+          "    pm.response.json();",
+          "  });",
+          "}"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Properties",
+      "item": [
+        {
+          "name": "Search properties - paged",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Response has page envelope\", function () {",
+                  "  pm.expect(json).to.have.property(\"data\").that.is.an(\"array\");",
+                  "  pm.expect(json).to.have.property(\"pagination\");",
+                  "  pm.expect(json.pagination).to.include.keys([\"page\", \"perPage\", \"prePage\", \"nextPage\", \"total\", \"totalPages\"]);",
+                  "});",
+                  "",
+                  "if (json.data.length > 0) {",
+                  "  pm.environment.set(\"propertyId\", json.data[0].id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties?page={{page}}&size={{size}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "{{page}}"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}"
+                }
+              ]
+            },
+            "description": "Returns a paged property list. Defaults in the backend are page=1 and size=20; this request uses environment variables so you can change them per run."
+          },
+          "response": []
+        },
+        {
+          "name": "Search properties - sample filters",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Filtered response is paged\", function () {",
+                  "  pm.expect(json.data).to.be.an(\"array\");",
+                  "  pm.expect(json.pagination.total).to.be.a(\"number\");",
+                  "});",
+                  "",
+                  "if (json.data.length > 0) {",
+                  "  pm.environment.set(\"propertyId\", json.data[0].id);",
+                  "  pm.test(\"First result matches sample filter intent\", function () {",
+                  "    pm.expect(json.data[0].propertyType).to.eql(pm.environment.get(\"propertyType\"));",
+                  "    pm.expect(json.data[0].city).to.eql(pm.environment.get(\"city\"));",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties?page=1&size=20&sort=price,asc&propertyType={{propertyType}}&propertyStatus={{propertyStatus}}&city={{city}}&zipCode={{zipCode}}&neighborhood={{neighborhood}}&street={{street}}&priceFrom={{priceFrom}}&priceTo={{priceTo}}&currency={{currency}}&bedroomsFrom={{bedroomsFrom}}&bedroomsTo={{bedroomsTo}}&bathroomsFrom={{bathroomsFrom}}&bathroomsTo={{bathroomsTo}}&garagesFrom={{garagesFrom}}&garagesTo={{garagesTo}}&areaFrom={{areaFrom}}&areaTo={{areaTo}}&yearBuiltFrom={{yearBuiltFrom}}&yearBuiltTo={{yearBuiltTo}}&features={{features}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "price,asc"
+                },
+                {
+                  "key": "propertyType",
+                  "value": "{{propertyType}}"
+                },
+                {
+                  "key": "propertyStatus",
+                  "value": "{{propertyStatus}}"
+                },
+                {
+                  "key": "city",
+                  "value": "{{city}}"
+                },
+                {
+                  "key": "zipCode",
+                  "value": "{{zipCode}}"
+                },
+                {
+                  "key": "neighborhood",
+                  "value": "{{neighborhood}}"
+                },
+                {
+                  "key": "street",
+                  "value": "{{street}}"
+                },
+                {
+                  "key": "priceFrom",
+                  "value": "{{priceFrom}}"
+                },
+                {
+                  "key": "priceTo",
+                  "value": "{{priceTo}}"
+                },
+                {
+                  "key": "currency",
+                  "value": "{{currency}}"
+                },
+                {
+                  "key": "bedroomsFrom",
+                  "value": "{{bedroomsFrom}}"
+                },
+                {
+                  "key": "bedroomsTo",
+                  "value": "{{bedroomsTo}}"
+                },
+                {
+                  "key": "bathroomsFrom",
+                  "value": "{{bathroomsFrom}}"
+                },
+                {
+                  "key": "bathroomsTo",
+                  "value": "{{bathroomsTo}}"
+                },
+                {
+                  "key": "garagesFrom",
+                  "value": "{{garagesFrom}}"
+                },
+                {
+                  "key": "garagesTo",
+                  "value": "{{garagesTo}}"
+                },
+                {
+                  "key": "areaFrom",
+                  "value": "{{areaFrom}}"
+                },
+                {
+                  "key": "areaTo",
+                  "value": "{{areaTo}}"
+                },
+                {
+                  "key": "yearBuiltFrom",
+                  "value": "{{yearBuiltFrom}}"
+                },
+                {
+                  "key": "yearBuiltTo",
+                  "value": "{{yearBuiltTo}}"
+                },
+                {
+                  "key": "features",
+                  "value": "{{features}}"
+                }
+              ]
+            },
+            "description": "Exercises the current search query parameters. The backend accepts repeated list params or comma-separated values for propertyStatus, neighborhood, street, and features."
+          },
+          "response": []
+        },
+        {
+          "name": "Get property detail",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Property detail has frontend-compatible shape\", function () {",
+                  "  pm.expect(json).to.include.keys([",
+                  "    \"id\", \"title\", \"desc\", \"propertyType\", \"propertyStatus\", \"city\", \"zipCode\",",
+                  "    \"neighborhood\", \"street\", \"location\", \"formattedAddress\", \"features\", \"featured\",",
+                  "    \"priceDollar\", \"priceEuro\", \"priceDinars\", \"bedrooms\", \"bathrooms\", \"garages\",",
+                  "    \"area\", \"yearBuilt\", \"ratingsCount\", \"ratingsValue\", \"additionalFeatures\",",
+                  "    \"gallery\", \"plans\", \"videos\", \"published\", \"lastUpdate\", \"views\", \"agentId\"",
+                  "  ]);",
+                  "});",
+                  "",
+                  "pm.environment.set(\"propertyId\", json.id);",
+                  "if (json.agentId) {",
+                  "  pm.environment.set(\"agentId\", json.agentId);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties/{{propertyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties",
+                "{{propertyId}}"
+              ]
+            },
+            "description": "Returns full property detail for the selected propertyId."
+          },
+          "response": []
+        },
+        {
+          "name": "Get featured properties",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Response is an array\", function () {",
+                  "  pm.expect(json).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "if (json.length > 0) {",
+                  "  pm.environment.set(\"featuredPropertyId\", json[0].id);",
+                  "  pm.environment.set(\"relatedPropertyId\", json[0].id);",
+                  "  pm.test(\"Featured items are flagged\", function () {",
+                  "    pm.expect(json[0].featured).to.eql(true);",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties/featured",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties",
+                "featured"
+              ]
+            },
+            "description": "Returns all listings where featured=true, ordered by published date descending."
+          },
+          "response": []
+        },
+        {
+          "name": "Get related properties",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Response is an array\", function () {",
+                  "  pm.expect(json).to.be.an(\"array\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties/{{relatedPropertyId}}/related",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties",
+                "{{relatedPropertyId}}",
+                "related"
+              ]
+            },
+            "description": "Returns up to 6 related listings with the same city and property type as relatedPropertyId."
+          },
+          "response": []
+        },
+        {
+          "name": "Property detail - not found",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () {",
+                  "  pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Error response has standard shape\", function () {",
+                  "  pm.expect(json).to.include.keys([\"timestamp\", \"status\", \"error\", \"message\", \"path\", \"fieldErrors\"]);",
+                  "  pm.expect(json.status).to.eql(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties/999999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties",
+                "999999"
+              ]
+            },
+            "description": "Expected 404 response for a property id that is not seeded."
+          },
+          "response": []
+        },
+        {
+          "name": "Search properties - invalid page",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Validation error response has fieldErrors\", function () {",
+                  "  pm.expect(json.status).to.eql(400);",
+                  "  pm.expect(json.fieldErrors).to.be.an(\"object\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties?page=0&size=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Expected 400 because page must be at least 1."
+          },
+          "response": []
+        },
+        {
+          "name": "Search properties - unsupported currency",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Error mentions unsupported currency\", function () {",
+                  "  pm.expect(json.status).to.eql(400);",
+                  "  pm.expect(json.message).to.include(\"Unsupported currency\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/properties?currency=BTC",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "properties"
+              ],
+              "query": [
+                {
+                  "key": "currency",
+                  "value": "BTC"
+                }
+              ]
+            },
+            "description": "Expected 400 because the backend currently supports USD, EUR, and RSD only."
+          },
+          "response": []
+        }
+      ],
+      "description": "Property search, detail, featured, related, and current validation/error cases."
+    },
+    {
+      "name": "Catalog",
+      "item": [
+        {
+          "name": "Get property types",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Response is catalog array\", function () {",
+                  "  pm.expect(json).to.be.an(\"array\");",
+                  "  pm.expect(json[0]).to.include.keys([\"id\", \"name\"]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/catalog/property-types",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "catalog",
+                "property-types"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get property statuses",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Response is catalog array\", function () {",
+                  "  pm.expect(json).to.be.an(\"array\");",
+                  "  pm.expect(json[0]).to.include.keys([\"id\", \"name\"]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/catalog/property-statuses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "catalog",
+                "property-statuses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get features",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Response is feature array\", function () {",
+                  "  pm.expect(json).to.be.an(\"array\");",
+                  "  pm.expect(json[0]).to.include.keys([\"id\", \"name\", \"selected\"]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/catalog/features",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "catalog",
+                "features"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get locations",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Response has location catalogs\", function () {",
+                  "  pm.expect(json).to.include.keys([\"cities\", \"zipCodes\", \"neighborhoods\", \"streets\", \"propertyLocations\"]);",
+                  "  pm.expect(json.propertyLocations).to.be.an(\"array\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/catalog/locations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "catalog",
+                "locations"
+              ]
+            },
+            "description": "Returns search dropdown locations plus map marker coordinates under propertyLocations."
+          },
+          "response": []
+        }
+      ],
+      "description": "Read-only catalog endpoints used by the frontend search and submit/edit property forms."
+    },
+    {
+      "name": "Documentation",
+      "item": [
+        {
+          "name": "OpenAPI JSON",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Response is OpenAPI document\", function () {",
+                  "  pm.expect(json).to.have.property(\"openapi\");",
+                  "  pm.expect(json).to.have.property(\"paths\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v3/api-docs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v3",
+                "api-docs"
+              ]
+            },
+            "description": "Springdoc OpenAPI document generated by the backend."
+          },
+          "response": []
+        },
+        {
+          "name": "Swagger UI HTML",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/swagger-ui/index.html",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "swagger-ui",
+                "index.html"
+              ]
+            },
+            "description": "Swagger UI entry point exposed by the backend."
+          },
+          "response": []
+        }
+      ],
+      "description": "Generated API documentation endpoints exposed by Springdoc."
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ]
+}

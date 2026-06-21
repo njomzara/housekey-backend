@@ -1,0 +1,12 @@
+package com.housekey;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class HousekeyApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(HousekeyApplication.class, args);
+    }
+}

@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: housekey-backend
+  servlet:
+    multipart:
+      max-file-size: ${HOUSEKEY_MAX_UPLOAD_SIZE:10MB}
+      max-request-size: ${HOUSEKEY_MAX_REQUEST_SIZE:40MB}
+  profiles:
+    active: local
+  flyway:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+housekey:
+  jwt:
+    secret: ${HOUSEKEY_JWT_SECRET:}
+    access-token-ttl: PT1H
+  cors:
+    allowed-origins:
+      - "http://localhost:*"
+      - "http://127.0.0.1:*"
+      - "http://[::1]:*"
+  dev-user:
+    enabled: false
+  media:
+    max-file-size: ${HOUSEKEY_MEDIA_MAX_FILE_SIZE:10MB}
+    storage:
+      root: ${HOUSEKEY_UPLOAD_ROOT:./storage/uploads}
+      public-url-prefix: /uploads

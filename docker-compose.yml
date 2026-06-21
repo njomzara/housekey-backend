@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - .:/app
+      - ~/.m2:/root/.m2
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      HOUSEKEY_JWT_SECRET: ${HOUSEKEY_JWT_SECRET:-local-development-jwt-secret-change-me-32b}
+      HOUSEKEY_UPLOAD_ROOT: /app/storage/uploads
+      # JAVA_TOOL_OPTIONS: >-
+      #   -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    command: >
+      mvn -ntp spring-boot:run
+      -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: housekey-postgres
+    environment:
+      POSTGRES_DB: housekey
+      POSTGRES_USER: housekey
+      POSTGRES_PASSWORD: housekey
+    ports:
+      - "5432:5432"
+    volumes:
+      - housekey-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U housekey -d housekey"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  housekey-postgres-data:

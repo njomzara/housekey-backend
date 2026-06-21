@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:housekey;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+housekey:
+  jwt:
+    secret: test-jwt-secret-for-housekey-auth-tests-32b
+    access-token-ttl: PT1H
+  dev-user:
+    enabled: true
+    username: agency.demo
+    email: agency.demo@housekey.local
+    password: Password123!
+    role: AGENCY
+    first-name: Demo
+    last-name: Agency
+  media:
+    max-file-size: 1MB
+    storage:
+      root: ./target/test-uploads
+      public-url-prefix: /uploads
