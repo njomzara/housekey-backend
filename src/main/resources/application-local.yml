@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/housekey
-    username: housekey
-    password: housekey
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:housekey}}
+    username: ${SPRING_DATASOURCE_USERNAME:${POSTGRES_USER:housekey}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${POSTGRES_PASSWORD:housekey}}
     driver-class-name: org.postgresql.Driver
 
 housekey:

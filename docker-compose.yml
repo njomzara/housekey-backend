@@ -10,6 +10,11 @@ services:
       - "5005:5005"
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-housekey}
+      POSTGRES_USER: ${POSTGRES_USER:-housekey}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-housekey}
       HOUSEKEY_JWT_SECRET: ${HOUSEKEY_JWT_SECRET:-local-development-jwt-secret-change-me-32b}
       HOUSEKEY_UPLOAD_ROOT: /app/storage/uploads
       # JAVA_TOOL_OPTIONS: >-
@@ -25,15 +30,15 @@ services:
     image: postgres:16-alpine
     container_name: housekey-postgres
     environment:
-      POSTGRES_DB: housekey
-      POSTGRES_USER: housekey
-      POSTGRES_PASSWORD: housekey
+      POSTGRES_DB: ${POSTGRES_DB:-housekey}
+      POSTGRES_USER: ${POSTGRES_USER:-housekey}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-housekey}
     ports:
       - "5432:5432"
     volumes:
       - housekey-postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U housekey -d housekey"]
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
       interval: 10s
       timeout: 5s
       retries: 5
