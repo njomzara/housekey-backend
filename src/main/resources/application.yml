@@ -32,6 +32,7 @@ housekey:
       - "http://localhost:*"
       - "http://127.0.0.1:*"
       - "http://[::1]:*"
+      - "https://blue-beach-06c3d0810.7.azurestaticapps.net"
   dev-user:
     enabled: false
   media:
