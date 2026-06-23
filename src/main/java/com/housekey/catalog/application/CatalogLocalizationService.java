@@ -19,7 +19,9 @@ public class CatalogLocalizationService {
     private static final List<CatalogEntry> PROPERTY_TYPES = List.of(
             new CatalogEntry(1, "OFFICE", "Office", "catalog.propertyType.office"),
             new CatalogEntry(2, "HOUSE", "House", "catalog.propertyType.house"),
-            new CatalogEntry(3, "APARTMENT", "Apartment", "catalog.propertyType.apartment"));
+            new CatalogEntry(3, "APARTMENT", "Apartment", "catalog.propertyType.apartment"),
+            new CatalogEntry(4, "GARAGE", "Garage", "catalog.propertyType.garage"),
+            new CatalogEntry(5, "WEEKEND_HOUSE", "Weekend House", "catalog.propertyType.weekendHouse"));
 
     private static final List<CatalogEntry> PROPERTY_STATUSES = List.of(
             new CatalogEntry(1, "FOR_SALE", "For Sale", "catalog.propertyStatus.forSale"),

@@ -1,7 +1,7 @@
 services:
   app:
-    build:
-      context: .
+    image: maven:3.9.6-eclipse-temurin-21
+    working_dir: /app
     volumes:
       - .:/app
       - ~/.m2:/root/.m2

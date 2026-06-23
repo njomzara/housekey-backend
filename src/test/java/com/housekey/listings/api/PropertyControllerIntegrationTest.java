@@ -110,16 +110,30 @@ class PropertyControllerIntegrationTest {
     void catalogReturnsStableCodesAndLocalizedNames() throws Exception {
         mockMvc.perform(get("/api/v1/catalog/property-types"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(5)))
                 .andExpect(jsonPath("$[2].id").value(3))
                 .andExpect(jsonPath("$[2].code").value("APARTMENT"))
-                .andExpect(jsonPath("$[2].name").value("Stan"));
+                .andExpect(jsonPath("$[2].name").value("Stan"))
+                .andExpect(jsonPath("$[3].id").value(4))
+                .andExpect(jsonPath("$[3].code").value("GARAGE"))
+                .andExpect(jsonPath("$[3].name").value("Garaza"))
+                .andExpect(jsonPath("$[4].id").value(5))
+                .andExpect(jsonPath("$[4].code").value("WEEKEND_HOUSE"))
+                .andExpect(jsonPath("$[4].name").value("Vikendica"));
 
         mockMvc.perform(get("/api/v1/catalog/property-types")
                         .header("Accept-Language", "en"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(5)))
                 .andExpect(jsonPath("$[2].id").value(3))
                 .andExpect(jsonPath("$[2].code").value("APARTMENT"))
-                .andExpect(jsonPath("$[2].name").value("Apartment"));
+                .andExpect(jsonPath("$[2].name").value("Apartment"))
+                .andExpect(jsonPath("$[3].id").value(4))
+                .andExpect(jsonPath("$[3].code").value("GARAGE"))
+                .andExpect(jsonPath("$[3].name").value("Garage"))
+                .andExpect(jsonPath("$[4].id").value(5))
+                .andExpect(jsonPath("$[4].code").value("WEEKEND_HOUSE"))
+                .andExpect(jsonPath("$[4].name").value("Weekend House"));
     }
 
     @Test
